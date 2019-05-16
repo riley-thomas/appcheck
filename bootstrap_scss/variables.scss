@@ -1,0 +1,45 @@
+// Colors
+$greenone : #68ab4d !default;
+$blueone : #99b7dc !default;
+$orangeone: #f98a02 !default;
+$whiteone: #f1fbed !default;
+
+$theme-colors: (
+  "primary": $greenone,
+  "secondary": $blueone,
+  "special": $orangeone
+);
+
+// Body
+$body-bg: #fff;
+
+// Typography
+$font-family-sans-serif: "TransportNew",Helvetica,Arial,sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+$text-color: $greenone;
+
+// Navbar
+$navbar-default-bg: #fff;
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Panels
+$panel-default-heading-bg: #fff;
+
+// Brands
+$brand-primary: $greenone;
+$brand-secondary: $blueone;
+$brand-special: $orangeone;
+$brand-info: #8eb4cb;
+$brand-success: #2ab27b;
+$brand-warning: #cbb956;
+$brand-danger: #bf5329;
+
+@font-face {
+  font-family: 'TransportNew';
+  src: url('/fonts/TransportNewLight_gdi.eot'); /* IE9 Compat Modes */
+  src: url('/fonts/TransportNewLight_gdi.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/TransportNewLight_gdi.woff') format('woff')
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import './css/sfmfb.css';
 import './css/style.css';
 import './css/custom.css';
 //import './css/bootstrap-custom.css';

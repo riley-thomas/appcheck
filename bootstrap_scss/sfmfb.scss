@@ -1,0 +1,7 @@
+//run scss --sourcemap=none sfmfb.scss ..\src\css\sfmfb.css
+
+// Variables
+@import "variables";
+
+// Bootstrap
+@import '../node_modules/bootstrap/scss/bootstrap';
