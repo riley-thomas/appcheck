@@ -9,10 +9,10 @@ class Footer extends Component {
 		let y = d.format('YYYY');
 
 		return (
-			<footer className="nav-footer fb-green-background" id="footer">
+			<footer className="nav-footer" id="footer">
 				<Container fluid>
 					<Row>
-						<Col className="text-right mr-5 pr-5"><span className="d-none d-md-inline">JRT</span> &copy;{ y }</Col>
+						<Col md="5" className="text-right"><span className="d-none d-md-inline">JRT</span> &copy;{ y }</Col>
 					</Row>
 				</Container>
 			</footer>
