@@ -11,8 +11,9 @@ class LookupPage extends Component {
 
 	constructor(props) {
 		super(props);
-		this.arg_names = ['birth_date','birth_date_string','street_number','zip_code'];
+		this.arg_names = ['birth_date','birth_date_string','birth_date_display_string','street_number','zip_code'];
 		this.state = {
+			today : new Date(),
 			args : [],
 			fetching: false,
 			data : null,
@@ -28,6 +29,7 @@ class LookupPage extends Component {
 		let n = Object.assign({}, this.state.args);
 		n['birth_date'] = d;
 		n['birth_date_string'] = moment(d).format('YYYY-MM-DD'); 
+		n['birth_date_display_string'] = moment(d).format('M/DD/YYYY'); 
 		this.setState({ args : n });
 	}
 
@@ -48,9 +50,10 @@ class LookupPage extends Component {
 	fetchApp(){
 		this.setState({fetching: true});
 		AppFetcher({ fields : this.state.args }).then( (response) => {
-			if(response.status === 200)	this.setState({data : response.data.response});
+			console.log(response);
+			if(response.status === 200)	this.setState({data : response.data});
         }).catch((e)=> { 
-        	this.setState({error : 'Error'}, ()=> {	console.error(e)});
+        	this.setState({data: null, error : 'Error'}, ()=> {	console.error(e)});
         }).finally(()=> {
         	this.stopWorking();
         });
@@ -73,7 +76,7 @@ class LookupPage extends Component {
 	renderCalendar() {
 	    return (
 	      <div>
-	        <Calendar onChange={this.onDateChange.bind(this)} value={this.state.args['birth_date'] } maxDate={new Date()} isOpen={true} view={"decade"} activeStartDate={new Date(1965,0,1)} />
+	        <Calendar onChange={this.onDateChange.bind(this)} maxDate={this.state.today} isOpen={true} view={"decade"} activeStartDate={new Date(1965,0,1)} calendarType="US" />
 	      </div>
 	    );
 	}
@@ -102,12 +105,13 @@ class LookupPage extends Component {
 				<Row className="mb-1">
 					<Col md="5"><h5>Select Date Of Birth</h5>{this.renderCalendar()}</Col>
 				</Row>
-				<Row className="d-none">
+				<Row className="mb-2">
 					<Col md="5">
-						<div className="input-group input-group-sm">
+						<div className="input-group input-group">
 							<div className="input-group-prepend input-group-prepend-sm"><div className="input-group-text">Birth Date</div></div>
-							<p className="form-control form-control-sm">{this.state.args['birth_date_string'] || ''}</p>
+							<p className="form-control form-control">{this.state.args['birth_date_display_string'] || ''}</p>
 						</div>
+						<small className="form-text text-muted">Use the calendar above to select date of birth</small>
 					</Col>
 				</Row>					
 				<Row className="mb-1">
@@ -125,7 +129,15 @@ class LookupPage extends Component {
 
 	renderAppStatusMessage() {
 		if(this.state.data){
-			return <AppStatusMessage data={this.state.data} />
+			return (
+				<Container>
+					<Row className="mt-2">
+						<Col md="5">
+							<Card><CardBody><AppStatusMessage data={this.state.data} /></CardBody></Card>
+						</Col>
+					</Row>
+				</Container>
+			)
 		}
 	}
 

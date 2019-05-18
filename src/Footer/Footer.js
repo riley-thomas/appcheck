@@ -12,7 +12,7 @@ class Footer extends Component {
 			<footer className="nav-footer" id="footer">
 				<Container fluid>
 					<Row>
-						<Col md="5" className="text-right"><span className="d-none d-md-inline">JRT</span> &copy;{ y }</Col>
+						<Col md="5" className="d-none text-right">SFMFB &copy;{ y }</Col>
 					</Row>
 				</Container>
 			</footer>
