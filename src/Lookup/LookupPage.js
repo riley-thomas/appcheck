@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Container, Card, CardBody, Badge, Row, Col, Alert } from 'reactstrap';
+import { Container, Card, CardBody, Row, Col, Alert } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Cookies from 'universal-cookie';
 import * as moment from 'moment';
 import Calendar from 'react-calendar';
 import AppFetcher from './AppFetcher';
@@ -14,6 +13,8 @@ class LookupPage extends Component {
 		this.arg_names = ['birth_date','birth_date_string','birth_date_display_string','street_number','zip_code'];
 		this.state = {
 			today : new Date(),
+			max_date : moment().subtract(15,'years').toDate(),
+			min_date : moment().subtract(110,'years').toDate(),
 			args : [],
 			fetching: false,
 			data : null,
@@ -34,9 +35,9 @@ class LookupPage extends Component {
 	}
 
 	updateFieldState(e) {
-		//console.log(e.target.value);
 		if(e.target.name ==='street_number') {
 			if( /[^0-9]/.test(e.target.value)) return;
+			if(e.target.value.length > 7) return;
 		}
 		if(e.target.name ==='zip_code') {
 			if( /[^0-9]/.test(e.target.value)) return;
@@ -50,7 +51,6 @@ class LookupPage extends Component {
 	fetchApp(){
 		this.setState({fetching: true});
 		AppFetcher({ fields : this.state.args }).then( (response) => {
-			console.log(response);
 			if(response.status === 200)	this.setState({data : response.data});
         }).catch((e)=> { 
         	this.setState({data: null, error : 'Error'}, ()=> {	console.error(e)});
@@ -76,7 +76,7 @@ class LookupPage extends Component {
 	renderCalendar() {
 	    return (
 	      <div>
-	        <Calendar onChange={this.onDateChange.bind(this)} maxDate={this.state.today} isOpen={true} view={"decade"} activeStartDate={new Date(1965,0,1)} calendarType="US" />
+	        <Calendar onChange={this.onDateChange.bind(this)} minDate={this.state.min_date}  maxDate={this.state.max_date} isOpen={true} view={"decade"} activeStartDate={new Date(1965,0,1)} calendarType="US" />
 	      </div>
 	    );
 	}
@@ -99,7 +99,6 @@ class LookupPage extends Component {
 	}
 
 	renderFields() {
-		let max_year = new Date().getFullYear();
 		return (			
 			<Container>
 				<Row className="mb-1">

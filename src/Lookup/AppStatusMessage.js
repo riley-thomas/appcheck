@@ -47,7 +47,7 @@ class AppStatusMessage extends Component {
                             if('pend' === data.detail.site.toLowerCase()) {
                                 message = 'application_response_active_wait_pend';
                             } else {
-                                if(data.detail.is_dup == '1') {
+                                if(data.detail.is_dup === '1') {
                                     message = 'application_response_active_wait_nopend_dup';
                                 } else {
                                     message = 'application_response_active_wait_nopend_nodup';
@@ -57,7 +57,7 @@ class AppStatusMessage extends Component {
                             if ('pend' === data.detail.site.toLowerCase()) {
                                 message = 'application_response_active_nowait_pend';
                             } else {
-                                if(data.detail.is_dup == '1') {
+                                if(data.detail.is_dup === '1') {
                                     message = 'application_response_active_nowait_nopend_dup';
                                 } else {
                                     message = 'application_response_active_nowait_nopend_nodup';
