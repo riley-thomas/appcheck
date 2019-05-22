@@ -4,6 +4,7 @@ import Lang from '../data/Lang.js';
 class AppStatusMessage extends Component {
 
 	render() {
+		let language = this.props.language || 'en';
 		let data = this.props.data;
 		let subs = ['site','timeslot','site_address','status','waitlist','waitnumber','waitsite_address'];
 		let message = '';
@@ -84,7 +85,7 @@ class AppStatusMessage extends Component {
 				message = 'application_response_error';
 				break;
 		}
-		let text = Lang.en[message];
+		let text = Lang[language][message];
 		if(data.detail) {
 			subs.forEach(val => {
 				let regex = '%'+val+'%';

@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { Container, Card, CardBody, Row, Col, Alert } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as moment from 'moment';
-import Calendar from 'react-calendar';
 import AppFetcher from './AppFetcher';
 import AppStatusMessage from './AppStatusMessage';
+import Lang from '../data/Lang.js';
 
 class LookupPage extends Component {
 
 	constructor(props) {
 		super(props);
-		this.arg_names = ['birth_date','birth_date_string','birth_date_display_string','street_number','zip_code'];
+		this.arg_names = ['birth_date','birth_date_string','street_number','zip_code'];
 		this.state = {
+			language : this.props.route.match.params.language,
 			today : new Date(),
 			max_date : moment().subtract(15,'years').toDate(),
 			min_date : moment().subtract(110,'years').toDate(),
@@ -21,20 +22,14 @@ class LookupPage extends Component {
 			error : null
 		};
 		this.arg_names.forEach(val => {
-			this.state.args[val] = (val === 'birth_date') ? new Date(1965,0,1) : this.state.args[val] = '';
+			//this.state.args[val] = (val === 'birth_date') ? new Date(1965,0,1) : this.state.args[val] = '';
+			this.state.args[val] = '';
 		});
 
 	}
 
-	onDateChange(d) {
-		let n = Object.assign({}, this.state.args);
-		n['birth_date'] = d;
-		n['birth_date_string'] = moment(d).format('YYYY-MM-DD'); 
-		n['birth_date_display_string'] = moment(d).format('M/DD/YYYY'); 
-		this.setState({ args : n });
-	}
-
 	updateFieldState(e) {
+		let n = Object.assign({}, this.state.args);
 		if(e.target.name ==='street_number') {
 			if( /[^0-9]/.test(e.target.value)) return;
 			if(e.target.value.length > 7) return;
@@ -43,8 +38,17 @@ class LookupPage extends Component {
 			if( /[^0-9]/.test(e.target.value)) return;
 			if(e.target.value.length > 5) return;
 		}
-		let n = Object.assign({}, this.state.args);
-		n[e.target.name] = (e.target.value.replace(/[^A-z0-9 *]/gi,'') || '');
+		if(e.target.name ==='birth_date') {
+			n['birth_date_string'] = null;
+			if(! /[-/\d]/.test(e.target.value)) return;
+			if(/^(\d{1,2}[-/]{1}){2}(19|20)\d{2}$/.test(e.target.value)){
+				if(moment(e.target.value).isValid()) {
+					n['birth_date_string'] = moment(e.target.value).format('YYYY-MM-DD'); 
+				}
+			}
+			
+		}
+		n[e.target.name] = (e.target.value.replace(/[^-/A-z0-9 *]/gi,'') || '');
 		this.setState({ args : n });
 	}
 
@@ -52,9 +56,9 @@ class LookupPage extends Component {
 		this.setState({fetching: true});
 		AppFetcher({ fields : this.state.args }).then( (response) => {
 			if(response.status === 200)	this.setState({data : response.data});
+			this.stopWorking();
         }).catch((e)=> { 
         	this.setState({data: null, error : 'Error'}, ()=> {	console.error(e)});
-        }).finally(()=> {
         	this.stopWorking();
         });
 	}
@@ -71,14 +75,6 @@ class LookupPage extends Component {
 				<input id={field.name} name={field.name} type="text" value={this.state.args[field.name] || ''} onChange={this.updateFieldState.bind(this)} className="form-control form-control" placeholder="" autoComplete="off" disabled={disabled} />
 			</div>
 		);
-	}
-
-	renderCalendar() {
-	    return (
-	      <div>
-	        <Calendar onChange={this.onDateChange.bind(this)} minDate={this.state.min_date}  maxDate={this.state.max_date} isOpen={true} view={"decade"} activeStartDate={new Date(1965,0,1)} calendarType="US" />
-	      </div>
-	    );
 	}
 
 	renderLookupButton() {
@@ -100,24 +96,15 @@ class LookupPage extends Component {
 
 	renderFields() {
 		return (			
-			<Container>
+			<Container>	
 				<Row className="mb-1">
-					<Col md="5"><h5>Select Date Of Birth</h5>{this.renderCalendar()}</Col>
-				</Row>
-				<Row className="mb-2">
-					<Col md="5">
-						<div className="input-group input-group">
-							<div className="input-group-prepend input-group-prepend-sm"><div className="input-group-text">Birth Date</div></div>
-							<p className="form-control form-control">{this.state.args['birth_date_display_string'] || ''}</p>
-						</div>
-						<small className="form-text text-muted">Use the calendar above to select date of birth</small>
-					</Col>
-				</Row>					
+					<Col md="5">{this.renderTextBox({name: 'birth_date', title : Lang[this.state.language]['birth_date']})}</Col>
+				</Row>				
 				<Row className="mb-1">
-					<Col md="5">{this.renderTextBox({name: 'street_number', title : 'Street Number'})}</Col>
+					<Col md="5">{this.renderTextBox({name: 'street_number', title : Lang[this.state.language]['street_number']})}</Col>
 				</Row>
 				<Row className="mb-1">
-					<Col md="5">{this.renderTextBox({name: 'zip_code', title : 'Zip'})}</Col>
+					<Col md="5">{this.renderTextBox({name: 'zip_code', title : Lang[this.state.language]['zip_code']})}</Col>
 				</Row>
 				<Row className="mb-1">
 					<Col md="5">{this.renderLookupButton()}</Col>
@@ -132,7 +119,7 @@ class LookupPage extends Component {
 				<Container>
 					<Row className="mt-2">
 						<Col md="5">
-							<Card><CardBody><AppStatusMessage data={this.state.data} /></CardBody></Card>
+							<Card><CardBody><AppStatusMessage data={this.state.data} language={this.state.language} /></CardBody></Card>
 						</Col>
 					</Row>
 				</Container>

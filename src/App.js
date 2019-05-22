@@ -11,9 +11,10 @@ class App extends Component {
     return (
       <div className="mb-5">
         <Switch>
-          <Route exact path="/" render={ (r) =>
+          <Redirect exact from="/" to="/en" />
+          <Route exact path="/:language(en|es)" render={ (r) =>
             <div> 
-              <LookupPage route={r}/>
+              <LookupPage route={r} language={r.match.params.language} />
             </div>
           } />
           <Route component={ErrorPage} />
