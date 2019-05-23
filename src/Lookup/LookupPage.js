@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Container, Card, CardBody, Row, Col, Alert } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as moment from 'moment';
@@ -28,6 +29,10 @@ class LookupPage extends Component {
 			this.state.args[val+'_class'] = '';
 		});
 
+	}
+
+	componentWillReceiveProps(nextProps){
+		if(this.props.route !== nextProps.route) this.setState({language : nextProps.route.match.params.language});
 	}
 
 	validateField(field, value) {
@@ -108,6 +113,14 @@ class LookupPage extends Component {
 		this.setState({fetching: false});
 	}
 
+	renderLanguageLinks() {
+		
+		return Object.keys(Lang).map((l, index) => {
+			let path = '/'+l;
+			let c = (l === this.state.language) ? 'mr-1 btn btn-primary' : 'mr-1 btn btn-outline-primary';
+			return (<Link key={l} to={path} className={c}>{ Lang[l].language }</Link>)
+		});
+	}
 	renderTextBox(field) {
 		let isdisabled = this.state.fetching ? 'disabled' : '';
 		let cssNames = (this.state.args[field.name+'_class']) ? 'form-control form-control '+this.state.args[field.name+'_class'] : 'form-control form-control';
@@ -140,6 +153,9 @@ class LookupPage extends Component {
 		return (			
 			<Container>	
 				<Row className="mb-1">
+					<Col md="5">{this.renderLanguageLinks()}</Col>
+				</Row>
+				<Row className="mb-1">
 					<Col md="5">{this.renderTextBox({name: 'birth_date', title : Lang[this.state.language]['birth_date'], placeholder: '--/--/----' })}</Col>
 				</Row>				
 				<Row className="mb-1">
@@ -161,7 +177,7 @@ class LookupPage extends Component {
 				<Container>
 					<Row className="mt-2">
 						<Col md="5">
-							<Card><CardBody><AppStatusMessage data={this.state.data} language={this.state.language} /></CardBody></Card>
+							<Card className='border-primary'><CardBody><AppStatusMessage data={this.state.data} language={this.state.language} /></CardBody></Card>
 						</Col>
 					</Row>
 				</Container>

@@ -1,5 +1,6 @@
 export default {
 	en: {
+		language: "English",
 		birth_date: "Birth Date",
 		street_number: "Street Number",
 		zip_code: "Zip Code",
@@ -17,6 +18,7 @@ export default {
 		application_response_error: "Sorry, there was a problem finding your application."
 	},
 	es: {
+		language: "Español",
 		birth_date: "esBirth Date",
 		street_number: "es Street Number",
 		zip_code: "es Zip Code",
