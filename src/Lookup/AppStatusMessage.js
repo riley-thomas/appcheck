@@ -8,7 +8,7 @@ class AppStatusMessage extends Component {
 		let data = this.props.data;
 		let subs = ['site','timeslot','site_address','status','waitlist','waitnumber','waitsite_address'];
 		let message = '';
-		let sample = {	
+		/* let sample = {	
 			"response":"one",
 			"detail":{
 				"site":"PEND",
@@ -26,7 +26,7 @@ class AppStatusMessage extends Component {
 				"is_dup":"0",
 				"participant_id":39617
 			}
-		}
+		} */
 
 		switch(data.response) {
 			case 'one':
